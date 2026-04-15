@@ -1,0 +1,35 @@
+-- 规定如何组装一个假容器，并规定这个容器的相关信息如何存储
+local out = {}
+---@type table<string,number>
+local containerId = {}
+
+---@class a546.FakeContainer
+---@field name string
+---@field component table<string,a546.Component>
+local container = {}
+container.__index = container
+
+--- 制造一个假容器外设
+---@param type string 容器类型
+---@param ... a546.Component 容器组件
+function out.make(type, ...)
+    -- 初始化
+    local o = setmetatable({}, container)
+    o.component = {}
+    --
+    local installComponent = {}
+    containerId[type] = containerId[type] or 0
+    local id = containerId[type]
+    o.name = ("%s_%d"):format(type, id)
+    for _, component in pairs({ ... }) do
+        if installComponent[component.type] then
+            goto continue
+        end
+        o.component[component.type] = component
+        ::continue::
+    end
+    containerId[type] = id + 1
+    return o
+end
+
+return out
