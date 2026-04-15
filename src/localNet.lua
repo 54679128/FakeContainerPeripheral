@@ -34,6 +34,18 @@ function out.removePeripheral(lNetId, name)
     netList[lNetId][name] = nil
 end
 
+--- 获取所有网络中的所有外设
+---@return table<string,a546.FakeContainer>
+function out.getAllPeripheral()
+    local result = {}
+    for i = 1, #netList do
+        for peripheralName, fakePeripheral in pairs(netList[i]) do
+            result[peripheralName] = fakePeripheral
+        end
+    end
+    return result
+end
+
 --- 从指定 id 代表的网络获取外设</br>
 --- id 所代表的网络不存在会导致报错</br>
 --- 不提供`name`参数时会返回指定网络中的所有外设
