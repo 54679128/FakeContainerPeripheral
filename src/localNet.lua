@@ -14,6 +14,9 @@ end
 ---@param lNetId integer
 ---@param peripheral a546.FakeContainer
 function out.addPeripheral(lNetId, peripheral)
+    if out.isPresent(peripheral.name) then
+        error(("The peripheral: %s has been add to some local net."):format(peripheral.name))
+    end
     if not netList[lNetId] then
         error(("Local net id: %d doesn't exist!"):format(tonumber(lNetId)))
     end
