@@ -7,4 +7,13 @@ function out.isPresent(name)
     return localNet.isPresent(name)
 end
 
+function out.getNames()
+    local peripheralList = localNet.getAllPeripheral()
+    local result = {}
+    for peripheralName, _ in pairs(peripheralList) do
+        table.insert(result, peripheralName)
+    end
+    return result
+end
+
 return out
