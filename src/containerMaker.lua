@@ -5,6 +5,7 @@ local containerId = {}
 
 ---@class a546.FakeContainer
 ---@field name string
+---@field type string
 ---@field component table<string,a546.Component>
 local container = {}
 container.__index = container
@@ -29,6 +30,7 @@ function out.make(type, ...)
         ::continue::
     end
     containerId[type] = id + 1
+    o.type = type
     return o
 end
 
