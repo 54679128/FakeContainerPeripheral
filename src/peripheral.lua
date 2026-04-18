@@ -56,4 +56,17 @@ function out.hasType(name,type)
     return nil
 end
 
+function out.getMethods(name)
+    assertExist(name)
+    local targetPeripheral = out.warp(name)
+    local result = {}
+    for funcName, value in pairs(targetPeripheral) do
+        if not type(value)~="function" then
+            goto continue
+        end
+        table.insert(result,funcName)
+        ::continue::
+    end
+end
+
 return out
