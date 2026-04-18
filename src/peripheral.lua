@@ -42,4 +42,17 @@ function out.getType(name)
     return typeList
 end
 
+function out.hasType(name,type)
+    assertExist(name)
+    -- 说实话，这里的检查会让下面函数内的检查闲的有些多余，重新写一遍逻辑可能是更好的选择。
+    --但现在我有点懒了。
+    local typeList = out.getType(name)
+    for i = 1, #typeList do
+        if typeList[i] == type then
+            return true
+        end
+    end
+    return nil
+end
+
 return out
