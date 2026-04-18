@@ -16,6 +16,7 @@ end
 function out.warp(name)
     assertExist(name)
     local result = {}
+    result.__name = name
     for _, component in pairs(localNet.getPeripheral(localNet.findPeripheral(name) --[[@as integer]], name).component) do
         for funcName, func in pairs(component) do
             if type(func) ~= "function" then
