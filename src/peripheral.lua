@@ -117,4 +117,22 @@ function out.call(name, method, ...)
     end)(...)
 end
 
+function out.find(type, filter)
+    local theFilter = filter or function()
+        return true
+    end
+    local result = {}
+    for peripheralName, per in pairs(localNet.getAllPeripheral()) do
+        if per.type ~= type then
+            goto continue
+        end
+        if not theFilter(peripheralName, out.warp(peripheralName)) then
+            goto continue
+        end
+        table.insert(result)
+        ::continue::
+    end
+    return table.unpack(result)
+end
+
 return out
