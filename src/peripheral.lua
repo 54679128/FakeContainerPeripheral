@@ -53,12 +53,13 @@ function out.warp(name)
     return result
 end
 
-function out.getType(name)
-    assertExist(name)
-    local targetPeripheral = localNet.getPeripheral(localNet.findPeripheral(name) --[[@as integer]], name)
-    if not next(targetPeripheral.component) then
-        return targetPeripheral.type
+function out.getType(nameOrPeripheral)
+    assertExist(nameOrPeripheral)
+    if type(nameOrPeripheral) == "table" then
+        ---@cast nameOrPeripheral a546.WarpPeripheral
+        return nameOrPeripheral.__type
     end
+    local targetPeripheral = localNet.getPeripheral(localNet.findPeripheral(nameOrPeripheral) --[[@as integer]], nameOrPeripheral)
     local typeList = {}
     table.insert(typeList, targetPeripheral.type)
     for _, component in pairs(targetPeripheral.component) do
