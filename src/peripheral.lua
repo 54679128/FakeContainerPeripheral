@@ -3,9 +3,23 @@ local localNet = require("localNet")
 -- 模拟 `peripheral` API，将被注入全局环境中
 local out = {}
 
+---@class a546.WarpPeripheral
+---@field __name string
+---@field __type string
+---@field [string] function
+
+--- 检查一个外设是否存在
+---@param name string|a546.WarpPeripheral
 local function assertExist(name)
-    if not localNet.isPresent(name) then
-        error(("Can't find peripheral: %s"):format(name), 3)
+    local theName
+    if type(name) == "table" then
+        theName = name.__name
+    else
+        theName = name
+    end
+    ---@cast theName string
+    if not localNet.isPresent(theName) then
+        error(("Can't find peripheral: %s"):format(theName), 3)
     end
 end
 
