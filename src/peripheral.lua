@@ -94,4 +94,26 @@ function out.getMethods(name)
     end
 end
 
+function out.call(name,method,...)
+    assertExist(name)
+    local targetMethod
+    local targetPeripheral = localNet.getPeripheral(localNet.findPeripheral(name)--[[@as integer]],name)
+    for _, component in pairs(targetPeripheral.component) do
+        for funcName, func in pairs(component) do
+            if type(func)~="function" then
+                goto continue
+            end
+            if funcName~=method then
+                goto continue
+            end
+            targetMethod = func
+            break
+            ::continue::
+        end
+    end
+    return (targetMethod or function ()
+        error(("Can't find method: %s in peripheral: %s"):format(tostring(method),name))
+    end)(...)
+end
+
 return out
