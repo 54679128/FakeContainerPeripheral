@@ -35,17 +35,17 @@ end
 ---@class a546.inventory:a546.Component
 ---@field type "inventory" 标识组件类型，这应该是唯一的
 ---@field invSize number 容器大小
----@field slotLimit number 单槽位容量上限
+---@field storageCoefficient number 容器单槽位存储系数，单槽位可存储物品数 = 存储系数 * 该槽位物品堆叠上限
 ---@field itemList table<slot,a546.FakeItem|nil> 物品列表
 ---@field dev a546.inventoryDev 供开发者和组件自身使用的函数集合
 local inventory = {}
 inventory.__index = inventory
 
-function out.make(size, slotLimit)
+function out.make(size, storageCoefficient)
     local o = setmetatable({}, inventory)
     o.type = "inventory"
     o.invSize = math.max(size or 1, 1)
-    o.slotLimit = slotLimit
+    o.storageCoefficient = storageCoefficient
     o.itemList = {}
     o.dev = setmetatable({}, InventoryDev)
     o.dev.inv = o
