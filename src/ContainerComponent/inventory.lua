@@ -23,7 +23,7 @@ FakeItem.__index = FakeItem
 ---@param stackLimit number
 ---@param nbt table<string,any>
 ---@return a546.FakeItem
-local function makeItem(name, count, stackLimit, nbt)
+function FakeItem.make(name, count, stackLimit, nbt)
     local o = setmetatable({}, FakeItem)
     o.name = name
     o.count = math.min(count or 1, stackLimit)
