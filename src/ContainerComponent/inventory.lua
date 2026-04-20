@@ -9,6 +9,58 @@ local out = {}
 local InventoryDev
 InventoryDev.__index = InventoryDev
 
+--- 向组件中添加一个指定的物品</br>
+--- 必要时会将物品分别放入多个不同的槽位
+---@param item a546.FakeItem
+---@return integer
+function InventoryDev:addItem(item)
+    local itemList = self.inv.itemList
+    local freeSlot = {}
+    local prepareTransfer = item.count
+    for slot, fakeItem in pairs(itemList) do
+        if not fakeItem then
+            table.insert(freeSlot, slot)
+            goto continue
+        end
+        if fakeItem.name ~= item.name then
+            goto continue
+        end
+        if util.serializeTable(item.nbt) ~= util.serializeTable(fakeItem.nbt) then
+            goto continue
+        end
+        local transferCount = math.min(prepareTransfer,
+            self.inv.storageCoefficient * fakeItem.stackLimit - fakeItem.count)
+        fakeItem.count = fakeItem.count + transferCount
+        prepareTransfer = prepareTransfer - transferCount
+        if prepareTransfer == 0 then
+            return item.count
+        end
+        ::continue::
+    end
+    local function copyNbt(nbt)
+        local result = {}
+        for key, value in pairs(nbt) do
+            if type(value) == "table" then
+                result[key] = copyNbt(value)
+            else
+                result[key] = value
+            end
+        end
+        return result
+    end
+    -- 既然能走到这，说明还有物品待分配
+    for i = 1, #freeSlot do
+        local transferCount = math.min(prepareTransfer,
+            self.inv.storageCoefficient * item.stackLimit)
+        prepareTransfer = prepareTransfer - transferCount
+        itemList[freeSlot[i]] = item.make(item.name, transferCount, item.stackLimit, copyNbt(item.nbt))
+        if prepareTransfer == 0 then
+            return item.count
+        end
+    end
+    return item.count - prepareTransfer
+end
+
 ---@class a546.FakeItem
 ---@field name string
 ---@field count number
