@@ -36,7 +36,7 @@ end
 ---@field type "inventory" 标识组件类型，这应该是唯一的
 ---@field invSize number 容器大小
 ---@field slotLimit number 单槽位容量上限
----@field itemList table<slot,a546.FakeItem> 物品列表
+---@field itemList table<slot,a546.FakeItem|nil> 物品列表
 ---@field dev a546.inventoryDev 供开发者和组件自身使用的函数集合
 local inventory = {}
 inventory.__index = inventory
