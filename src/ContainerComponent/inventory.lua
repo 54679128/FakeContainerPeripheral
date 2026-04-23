@@ -10,16 +10,28 @@ local InventoryDev
 InventoryDev.__index = InventoryDev
 
 --- 向组件中添加一个指定的物品</br>
---- 必要时会将物品分别放入多个不同的槽位
+--- 必要时会将物品分别放入多个不同的槽位</br>
+--- 如果指定了槽位，则只会放入指定槽位中
 ---@param item a546.FakeItem
+---@param slot? integer
 ---@return integer
-function InventoryDev:addItem(item)
-    local itemList = self.inv.itemList
+function InventoryDev:addItem(item, slot)
+    local itemList
+    if slot then
+        itemList = self.inv.itemList
+    else
+        if slot < 0 then
+            error(("Param slot: %d < 0"):format(slot), 2)
+        elseif slot > self.inv.invSize then
+            error(("Param slot: %d > %d"):format(slot, self.inv.invSize))
+        end
+        itemList = { itemList[slot] }
+    end
     local freeSlot = {}
     local prepareTransfer = item.count
-    for slot, fakeItem in pairs(itemList) do
+    for theSlot, fakeItem in pairs(itemList) do
         if not fakeItem then
-            table.insert(freeSlot, slot)
+            table.insert(freeSlot, theSlot)
             goto continue
         end
         if fakeItem.name ~= item.name then
