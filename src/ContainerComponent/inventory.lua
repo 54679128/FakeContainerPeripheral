@@ -17,7 +17,7 @@ InventoryDev.__index = InventoryDev
 ---@return integer
 function InventoryDev:addItem(item, slot)
     local itemList
-    if slot then
+    if not slot then
         itemList = self.inv.itemList
     else
         if slot < 0 then
