@@ -9,6 +9,47 @@ local out = {}
 local InventoryDev
 InventoryDev.__index = InventoryDev
 
+--- 将物品从指定的槽位中移除</br>
+--- 如果`count`大于该槽位的物品数，则只移除存在的数量
+---@param slot integer
+---@param count? integer
+---@return a546.FakeItem|nil
+function InventoryDev:removeItem(slot, count)
+    -- 参数处理和检查
+    if slot > self.inv.invSize then
+        error(("Param slot: %d > %d"):format(slot, self.inv.invSize), 2)
+    elseif slot < 0 then
+        error(("Param slot: %d < 0"):format(slot), 2)
+    end
+    if not self.inv.itemList[slot] then
+        return nil
+    end
+    local preRemove = count or self.inv.itemList[slot].count
+    -- 移除物品
+    local function copyNbt(nbt)
+        local result = {}
+        for key, value in pairs(nbt) do
+            if type(value) == "table" then
+                result[key] = copyNbt(value)
+            else
+                result[key] = value
+            end
+        end
+        return result
+    end
+    local resultItem
+    if preRemove >= self.inv.itemList[slot].count then
+        resultItem = self.inv.itemList[slot]
+        self.inv.itemList[slot] = nil
+    else
+        local item = self.inv.itemList[slot]
+        ---@cast item -nil
+        resultItem = item.make(item.name, preRemove, item.stackLimit, copyNbt(item.nbt))
+        item.count = item.count - preRemove
+    end
+    return resultItem
+end
+
 --- 向组件中添加一个指定的物品</br>
 --- 必要时会将物品分别放入多个不同的槽位</br>
 --- 如果指定了槽位，则只会放入指定槽位中
