@@ -178,4 +178,8 @@ function inventory:getItemDetail(slot)
     return itemList[slot]
 end
 
+function inventory:getItemLimit(slot)
+    return 64 * self.storageCoefficient
+end
+
 return out
