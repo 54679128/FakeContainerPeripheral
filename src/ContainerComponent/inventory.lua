@@ -173,4 +173,9 @@ function inventory:list()
     return result
 end
 
+function inventory:getItemDetail(slot)
+    local itemList = inventory:list()
+    return itemList[slot]
+end
+
 return out
