@@ -1,4 +1,5 @@
 local util = require("lib.util")
+local localNet = require("localNet")
 -- 通用物品容器外设组件
 local out = {}
 
@@ -180,6 +181,66 @@ end
 
 function inventory:getItemLimit(slot)
     return 64 * self.storageCoefficient
+end
+
+function inventory:pushItems(toName, fromSlot, ...)
+    -- 参数处理
+    local limit, toSlot
+    local paramCount = select("#", ...)
+    if paramCount == 2 then
+        limit, toSlot = ...
+        limit = limit or 64
+    elseif paramCount == 1 then
+        limit = ...
+    end
+
+    -- 检查参数合法
+    if not localNet.isPresent(toName) or localNet.inSameNet(toName, self.fatherContainer.name) then
+        error(("Can't find peripheral: %s"):format(toName), 2)
+    end
+    -- 查找远程外设
+    local targetComponent = localNet.getPeripheral(localNet.findPeripheral(toName) --[[@as integer]], toName).component
+    [self.type]
+    if targetComponent.type ~= "inventory" then
+        error(("The peripheral: %s isn't inventory"):format(toName), 2)
+    end
+    ---@cast targetComponent a546.inventory
+
+    -- 移除物品
+    local transferItem = self.dev:removeItem(fromSlot, limit)
+    if not transferItem then
+        return 0
+    end
+    -- 转移物品
+    local actuallyTransfer = targetComponent.dev:addItem(transferItem, toSlot)
+    if actuallyTransfer == transferItem.count then
+        return actuallyTransfer
+    end
+    -- 处理无法转移的物品
+    self.dev:removeItem(fromSlot)
+    transferItem.count = transferItem.count - actuallyTransfer
+    self.dev:addItem(transferItem, fromSlot)
+end
+
+function inventory:pullItems(fromName, fromSlot, ...)
+    -- 检查参数合法
+    if not localNet.isPresent(fromName) or localNet.inSameNet(fromName, self.fatherContainer.name) then
+        error(("Can't find peripheral: %s"):format(fromName), 2)
+    end
+    -- 查找远程外设
+    local targetComponent = localNet.getPeripheral(localNet.findPeripheral(fromName) --[[@as integer]], fromName)
+    .component[self.type]
+    if targetComponent.type ~= "inventory" then
+        error(("The peripheral: %s isn't inventory"):format(fromName), 2)
+    end
+    ---@cast targetComponent a546.inventory
+    -- 检查槽位
+    if fromSlot > self.invSize or fromName < 1 then
+        error(("Param \"fromSlot\" must between %d and %d"):format(1, self.invSize),2)
+    end
+
+    -- 调用对方的push方法
+    return targetComponent:pushItems(self.fatherContainer.name, fromSlot,...)
 end
 
 return out
