@@ -66,7 +66,7 @@ function InventoryDev:addItem(item, slot)
         elseif slot > self.inv.invSize then
             error(("Param slot: %d > %d"):format(slot, self.inv.invSize))
         end
-        itemList = { itemList[slot] }
+        itemList = { [slot] = self.inv.itemList[slot] }
     end
     local freeSlot = {}
     local prepareTransfer = item.count
