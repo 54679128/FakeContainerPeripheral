@@ -27,6 +27,7 @@ function out.make(type, ...)
             goto continue
         end
         o.component[component.type] = component
+        component.fatherContainer = o
         ::continue::
     end
     containerId[type] = id + 1
