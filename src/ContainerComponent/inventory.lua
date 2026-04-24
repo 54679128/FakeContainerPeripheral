@@ -164,6 +164,7 @@ end
 function inventory:list()
     local result = {}
     for slot, itemInfo in pairs(self.itemList) do
+        result[slot] = {}
         result[slot].name = itemInfo.name
         result[slot].count = itemInfo.count
         result[slot].nbt = util.serializeTable(itemInfo.nbt)
