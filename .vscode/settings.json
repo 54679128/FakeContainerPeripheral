@@ -1,6 +1,5 @@
 {
-    "Lua.diagnostics.disable": [
-    ],
+    "Lua.diagnostics.disable": [],
     "Lua.workspace.library": [
         "${addons}/cc-tweaked/module/library",
         "${3rd}/luassert/library",
