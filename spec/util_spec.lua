@@ -14,7 +14,7 @@ describe("util模块测试", function()
             c = true,
             e = 7.5
         }
-        print(p.serializeTable(testTable))
+        -- print(p.serializeTable(testTable))
         local theTable = unSerializeTable(p.serializeTable(testTable))
         assert.Same(theTable, testTable)
     end)
@@ -29,7 +29,7 @@ describe("util模块测试", function()
             b = "hello",
             c = false
         }
-        print(p.serializeTable(testTable))
+        -- print(p.serializeTable(testTable))
         local theTable = unSerializeTable(p.serializeTable(testTable))
         assert.Same(theTable, testTable)
     end)
