@@ -123,6 +123,8 @@ end
 local FakeItem = {}
 FakeItem.__index = FakeItem
 
+out.FakeItem = FakeItem
+
 --- 创建一个假物品
 ---@param name string
 ---@param count number
@@ -200,7 +202,7 @@ function inventory:pushItems(toName, fromSlot, ...)
     end
     -- 查找远程外设
     local targetComponent = localNet.getPeripheral(localNet.findPeripheral(toName) --[[@as integer]], toName).component
-    [self.type]
+        [self.type]
     if targetComponent.type ~= "inventory" then
         error(("The peripheral: %s isn't inventory"):format(toName), 2)
     end
@@ -229,18 +231,18 @@ function inventory:pullItems(fromName, fromSlot, ...)
     end
     -- 查找远程外设
     local targetComponent = localNet.getPeripheral(localNet.findPeripheral(fromName) --[[@as integer]], fromName)
-    .component[self.type]
+        .component[self.type]
     if targetComponent.type ~= "inventory" then
         error(("The peripheral: %s isn't inventory"):format(fromName), 2)
     end
     ---@cast targetComponent a546.inventory
     -- 检查槽位
     if fromSlot > self.invSize or fromName < 1 then
-        error(("Param \"fromSlot\" must between %d and %d"):format(1, self.invSize),2)
+        error(("Param \"fromSlot\" must between %d and %d"):format(1, self.invSize), 2)
     end
 
     -- 调用对方的push方法
-    return targetComponent:pushItems(self.fatherContainer.name, fromSlot,...)
+    return targetComponent:pushItems(self.fatherContainer.name, fromSlot, ...)
 end
 
 return out
