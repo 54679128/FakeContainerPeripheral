@@ -46,7 +46,9 @@ function out.warp(name)
             if type(func) ~= "function" then
                 goto continue
             end
-            result[funcName] = func
+            result[funcName] = function(...)
+                func(component, ...)
+            end
             ::continue::
         end
     end
