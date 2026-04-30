@@ -71,7 +71,9 @@ function InventoryDev:addItem(item, slot)
     end
     local freeSlot = {}
     local prepareTransfer = item.count
-    for theSlot, fakeItem in pairs(itemList) do
+    for i = 1, self.inv.invSize, 1 do
+        local theSlot = i
+        local fakeItem = itemList[i]
         if not fakeItem then
             table.insert(freeSlot, theSlot)
             goto continue
