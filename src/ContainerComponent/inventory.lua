@@ -7,7 +7,7 @@ local out = {}
 
 ---@class a546.inventoryDev
 ---@field inv a546.inventory
-local InventoryDev
+local InventoryDev = {}
 InventoryDev.__index = InventoryDev
 
 --- 将物品从指定的槽位中移除</br>
