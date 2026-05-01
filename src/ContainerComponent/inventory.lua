@@ -59,19 +59,19 @@ end
 ---@return integer
 function InventoryDev:addItem(item, slot)
     local itemList
-    if not slot then
-        itemList = self.inv.itemList
-    else
+    if slot then
         if slot < 0 then
             error(("Param slot: %d < 0"):format(slot), 2)
         elseif slot > self.inv.invSize then
             error(("Param slot: %d > %d"):format(slot, self.inv.invSize))
         end
-        itemList = { [slot] = self.inv.itemList[slot] }
     end
+    itemList = self.inv.itemList
     local freeSlot = {}
     local prepareTransfer = item.count
-    for theSlot, fakeItem in pairs(itemList) do
+    for i = slot or 1, slot or self.inv.invSize, 1 do
+        local theSlot = i
+        local fakeItem = itemList[i]
         if not fakeItem then
             table.insert(freeSlot, theSlot)
             goto continue
