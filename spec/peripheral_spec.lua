@@ -31,7 +31,7 @@ local function fakeComponent(type, ...)
             return funcStack.func(self, ...)
         end
     end
-    return setmetatable({ type = type }, meta)--[[@as a546.Component]]
+    return setmetatable({ type = type }, meta) --[[@as a546.Component]]
 end
 
 describe("模拟peripheralAPI测试", function()
@@ -319,10 +319,8 @@ describe("对于peripheral模块", function()
             assert.is.equal(randomNumber, p[randomFuncName .. "_3"]())
             assert.is.equal(componentB.type, p[randomFuncName .. "_4"]())
         end)
-        it("包裹不存在的外设会报错", function()
-            assert.has.error(function()
-                peripheral.wrap("non-exist peripheral name")
-            end, ("Can't find peripheral: %s"):format("non-exist peripheral name"))
+        it("包裹不存在的外设时返回nil", function()
+            assert.is.Nil(peripheral.wrap("non-exist peripheral name"))
         end)
         it("尝试从被包裹的外设中调用不存在的方法应该报错", function()
             local p = peripheral.wrap(bC.name)
