@@ -55,26 +55,30 @@ describe("tank模块", function()
                 return fullTankNum, emptyTankNum
             end
             for i = 1, #sizeList, 1 do
-                it(("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时可以添加流体"):format(sizeList[i], storageCoefficient[i], commonCapacity), function()
-                    local tempCapacityList = {}
-                    for j = 1, sizeList[i], 1 do
-                        tempCapacityList[j] = commonCapacity
-                    end
-                    local testTank = Tank.make(sizeList[i], storageCoefficient[i], tempCapacityList)
-                    assert.is.equal(math.min(testTank.storageCoefficient * commonCapacity,
-                        1000), testTank.dev:addFluid(water(), 1000))
-                    for _, fluidStack in pairs(testTank.fluidList) do
-                        if not fluidStack.fluid then
-                            goto continue
+                it(
+                ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时可以添加流体"):format(sizeList[i], storageCoefficient[i], commonCapacity),
+                    function()
+                        local tempCapacityList = {}
+                        for j = 1, sizeList[i], 1 do
+                            tempCapacityList[j] = commonCapacity
                         end
-                        assert.is.same(water(), fluidStack.fluid)
-                        assert.is.equal(fluidStack.amount, math.min(testTank.storageCoefficient * commonCapacity,
-                            1000))
-                        break
-                        ::continue::
-                    end
-                end)
-                it(("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时，多次添加过量（超出单个储罐容量）流体，应优先填充已含同种流体的未满储罐，其次填充空储罐"):format(sizeList[i], storageCoefficient[i], commonCapacity), function()
+                        local testTank = Tank.make(sizeList[i], storageCoefficient[i], tempCapacityList)
+                        assert.is.equal(math.min(testTank.storageCoefficient * commonCapacity,
+                            1000), testTank.dev:addFluid(water(), 1000))
+                        for _, fluidStack in pairs(testTank.fluidList) do
+                            if not fluidStack.fluid then
+                                goto continue
+                            end
+                            assert.is.same(water(), fluidStack.fluid)
+                            assert.is.equal(fluidStack.amount, math.min(testTank.storageCoefficient * commonCapacity,
+                                1000))
+                            break
+                            ::continue::
+                        end
+                    end)
+                it(
+                ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时，多次添加过量（超出单个储罐容量）流体，应优先填充已含同种流体的未满储罐，其次填充空储罐"):format(sizeList[i],
+                    storageCoefficient[i], commonCapacity), function()
                     local tempCapacityList = {}
                     for j = 1, sizeList[i], 1 do
                         tempCapacityList[j] = commonCapacity
@@ -94,33 +98,38 @@ describe("tank模块", function()
                     assert.is.equal(2, fullTankNum)
                     assert.is.equal(sizeList[i] - 2, emptyTankNum)
                 end)
-                it(("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时可以移除流体"):format(sizeList[i], storageCoefficient[i], commonCapacity), function()
-                    local tempCapacityList = {}
-                    for j = 1, sizeList[i], 1 do
-                        tempCapacityList[j] = commonCapacity
-                    end
-                    local testTank = Tank.make(sizeList[i], storageCoefficient[i], tempCapacityList)
-                    assert.is.equal(math.min(testTank.storageCoefficient * commonCapacity, 1000), testTank.dev:addFluid(water(), 1000))
-                    local wantRemove = 0.5 * math.min(testTank.storageCoefficient * commonCapacity, 1000)
-                    local removedFluid, actuallyRemoved = testTank.dev:removeFluid(water().name, wantRemove)
-                    assert.is.equal(actuallyRemoved, wantRemove)
-                    local atLeastFined = false
-                    for _, fluidStack in pairs(testTank.fluidList) do
-                        if not fluidStack.fluid then
-                            goto continue
+                it(
+                ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时可以移除流体"):format(sizeList[i], storageCoefficient[i], commonCapacity),
+                    function()
+                        local tempCapacityList = {}
+                        for j = 1, sizeList[i], 1 do
+                            tempCapacityList[j] = commonCapacity
                         end
-                        assert.is.same(water(), fluidStack.fluid)
-                        assert.is.equal(fluidStack.amount, wantRemove)
-                        removedFluid, actuallyRemoved = testTank.dev:removeFluid(water().name, wantRemove)
+                        local testTank = Tank.make(sizeList[i], storageCoefficient[i], tempCapacityList)
+                        assert.is.equal(math.min(testTank.storageCoefficient * commonCapacity, 1000),
+                            testTank.dev:addFluid(water(), 1000))
+                        local wantRemove = 0.5 * math.min(testTank.storageCoefficient * commonCapacity, 1000)
+                        local removedFluid, actuallyRemoved = testTank.dev:removeFluid(water().name, wantRemove)
                         assert.is.equal(actuallyRemoved, wantRemove)
-                        assert.is.Nil(fluidStack.fluid)
-                        atLeastFined = true
-                        break
-                        ::continue::
-                    end
-                    assert.is.True(atLeastFined)
-                end)
-                it(("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb且储罐充满流体时，只会移除其中一个储罐的流体"):format(sizeList[i], storageCoefficient[i], commonCapacity), function()
+                        local atLeastFined = false
+                        for _, fluidStack in pairs(testTank.fluidList) do
+                            if not fluidStack.fluid then
+                                goto continue
+                            end
+                            assert.is.same(water(), fluidStack.fluid)
+                            assert.is.equal(fluidStack.amount, wantRemove)
+                            removedFluid, actuallyRemoved = testTank.dev:removeFluid(water().name, wantRemove)
+                            assert.is.equal(actuallyRemoved, wantRemove)
+                            assert.is.Nil(fluidStack.fluid)
+                            atLeastFined = true
+                            break
+                            ::continue::
+                        end
+                        assert.is.True(atLeastFined)
+                    end)
+                it(
+                ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb且储罐充满流体时，只会移除其中一个储罐的流体"):format(sizeList[i], storageCoefficient[i],
+                    commonCapacity), function()
                     local tempCapacityList = {}
                     for j = 1, sizeList[i], 1 do
                         tempCapacityList[j] = commonCapacity
@@ -154,7 +163,10 @@ describe("tank模块", function()
         local commonFluidInput = 10000
         for i = 1, #tankAProperties.sizeList, 1 do
             local describeText = ("[容器A参数: size: %d, coefficient: %.2f, capacity: %s -- 容器B参数: size: %d, coefficient: %.2f, capacity: %s]")
-                :format(tankAProperties.sizeList[i], tankAProperties.storageCoefficient[i], ("{%s}"):format(table.concat(tankAProperties.capacityList[i], ", ")), tankBProperties.sizeList[i], tankBProperties.storageCoefficient[i], ("{%s}"):format(table.concat(tankBProperties.capacityList[i], ", ")))
+                :format(tankAProperties.sizeList[i], tankAProperties.storageCoefficient[i],
+                    ("{%s}"):format(table.concat(tankAProperties.capacityList[i], ", ")), tankBProperties.sizeList[i],
+                    tankBProperties.storageCoefficient[i],
+                    ("{%s}"):format(table.concat(tankBProperties.capacityList[i], ", ")))
             describe(describeText, function()
                 local aNet
                 local bNet
@@ -177,9 +189,11 @@ describe("tank模块", function()
                 before_each(function()
                     aNet = LocalNet.make()
                     bNet = LocalNet.make()
-                    tankAComponent = Tank.make(tankAProperties.sizeList[i], tankAProperties.storageCoefficient[i], tankAProperties.capacityList[i])
+                    tankAComponent = Tank.make(tankAProperties.sizeList[i], tankAProperties.storageCoefficient[i],
+                        tankAProperties.capacityList[i])
                     tankAComponent.dev:addFluid(water(), commonFluidInput)
-                    tankBComponent = Tank.make(tankBProperties.sizeList[i], tankBProperties.storageCoefficient[i], tankBProperties.capacityList[i])
+                    tankBComponent = Tank.make(tankBProperties.sizeList[i], tankBProperties.storageCoefficient[i],
+                        tankBProperties.capacityList[i])
                     tankA = VirtualPeripheral.make("bottle", tankAComponent)
                     tankB = VirtualPeripheral.make("bottle", tankBComponent)
                     tankC = VirtualPeripheral.make("bottle", Tank.make(1, 1, { 1 })) -- 这个外设主要是为了验证不同网络间的外设不能互相访问，组件设定（我写到这的时候忘记怎么描述这些参数了）之类的东西不用管
@@ -216,6 +230,8 @@ describe("tank模块", function()
                 end
                 it("tanks方法应该正常工作", function()
                     local p = peripheral.wrap(tankA.name)
+                    assert.is.Not.Nil(p)
+                    ---@cast p -nil
                     local fluidList = p.tanks()
                     for _, fluidInfo in pairs(fluidList) do
                         local fluidStack = findFluidStack(tankAComponent.fluidList, fluidInfo.name)
@@ -229,6 +245,8 @@ describe("tank模块", function()
                 end)
                 it("在自身储罐没有对应流体时，pullFluid可以将目标容器中的流体拉取到自身的一个空储罐中", function()
                     local p = peripheral.wrap(tankB.name)
+                    assert.is.Not.Nil(p)
+                    ---@cast p -nil
                     local transferFluidStackA, slotA = findFluidStack(tankAComponent.fluidList, water().name)
                     assert.is.Not.Nil(transferFluidStackA)
                     ---@cast transferFluidStackA -nil
@@ -250,19 +268,25 @@ describe("tank模块", function()
                     ---@cast transferFluidStackB -nil
                     assert.is.equal(preloadVolume, transferFluidStackB.amount)
                     local p = peripheral.wrap(tankB.name)
+                    assert.is.Not.Nil(p)
+                    ---@cast p -nil
                     local transferFluidStackA, slotA = findFluidStack(tankAComponent.fluidList, water().name)
                     assert.is.Not.Nil(transferFluidStackA)
                     ---@cast transferFluidStackA -nil
                     local originAFluidAmount = transferFluidStackA.amount
                     local actuallyTransfer = p.pullFluid(tankA.name)
-                    local exceptTransfer = math.min(coeB * capacityB[slotB] - preloadVolume, commonFluidInput, coeA * capacityA[slotA])
+                    local exceptTransfer = math.min(coeB * capacityB[slotB] - preloadVolume, commonFluidInput,
+                        coeA * capacityA[slotA])
                     assert.is.equal(exceptTransfer, actuallyTransfer)
                     assert.is.equal(transferFluidStackB.amount, actuallyTransfer + preloadVolume)
-                    assert.is.equal(originAFluidAmount, transferFluidStackA.amount + transferFluidStackB.amount - preloadVolume)
+                    assert.is.equal(originAFluidAmount,
+                        transferFluidStackA.amount + transferFluidStackB.amount - preloadVolume)
                 end)
                 it("在自身某个储罐存在对应流体但该储罐已满时，pullFluid会尝试将流体拉取到可能的空储罐", function()
                     tankBComponent.dev:addFluid(water(), 2 ^ 12 * coeB)
                     local p = peripheral.wrap(tankB.name)
+                    assert.is.Not.Nil(p)
+                    ---@cast p -nil
 
                     local transferFluidStackA, slotA = findFluidStack(tankAComponent.fluidList, water().name)
                     assert.is.Not.Nil(transferFluidStackA)
@@ -310,20 +334,27 @@ describe("tank模块", function()
                         tankBComponent.dev:addFluid(water(), 2 ^ 12 * coeB)
                     end
                     local p = peripheral.wrap(tankB.name)
+                    assert.is.Not.Nil(p)
+                    ---@cast p -nil
                     local actuallyTransfer = p.pullFluid(tankA.name)
                     assert.is.equal(0, actuallyTransfer)
                 end)
                 it("可以使用limit参数限制pullFluid拉取的流体数量", function()
                     local p = peripheral.wrap(tankB.name)
+                    assert.is.Not.Nil(p)
+                    ---@cast p -nil
                     local _, slotA = findFluidStack(tankAComponent.fluidList, water().name)
                     local theRandomNum = math.random(888)
                     local actuallyTransfer = p.pullFluid(tankA.name, theRandomNum)
                     local _, slotB = findFluidStack(tankBComponent.fluidList, water().name)
-                    assert.is.equal(math.min(theRandomNum, coeA * capacityA[slotA], coeB * capacityB[slotB]), actuallyTransfer)
+                    assert.is.equal(math.min(theRandomNum, coeA * capacityA[slotA], coeB * capacityB[slotB]),
+                        actuallyTransfer)
                 end)
                 it("可以使用fluidName参数限制pullFluid拉取的流体", function()
                     tankAComponent.dev:addFluid(lava(), 34)
                     local p = peripheral.wrap(tankB.name)
+                    assert.is.Not.Nil(p)
+                    ---@cast p -nil
                     p.pullFluid(tankA.name, nil, lava().name)
                     local findLava = false
                     for _, fluidStack in pairs(tankBComponent.fluidList) do
@@ -338,18 +369,24 @@ describe("tank模块", function()
                 end)
                 it("使用不存在的外设名调用pullFluid应该报错", function()
                     local p = peripheral.wrap(tankB.name)
+                    assert.is.Not.Nil(p)
+                    ---@cast p -nil
                     assert.has.error(function()
                         p.pullFluid("Doesn't exist peripheral name")
                     end)
                 end)
                 it("尝试用pullFluid跨网络拉取流体应该报错", function()
                     local p = peripheral.wrap(tankC.name)
+                    assert.is.Not.Nil(p)
+                    ---@cast p -nil
                     assert.has.error(function()
                         p.pullFluid(tankA.name)
                     end, ("Can't find peripheral: %s"):format(tankA.name))
                 end)
                 it("尝试用pullFluid从非tank外设上拉取流体应该报错", function()
                     local p = peripheral.wrap(tankB.name)
+                    assert.is.Not.Nil(p)
+                    ---@cast p -nil
                     assert.has.error(function()
                         p.pullFluid(otherPeripheral.name)
                     end, ("The peripheral: %s isn't %s"):format(otherPeripheral.name, tankBComponent.type))
