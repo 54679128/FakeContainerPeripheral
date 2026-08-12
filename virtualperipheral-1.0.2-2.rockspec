@@ -1,6 +1,6 @@
 rockspec_format = "3.0"
 package = "VirtualPeripheral"
-version = "1.0.2"
+version = "1.0.2-2"
 source = {
    url = "git+https://github.com/54679128/VirtualPeripheral.git",
    tag = "v1.0.2"
