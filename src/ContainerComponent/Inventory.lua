@@ -189,7 +189,8 @@ function Inventory:pushItems(toName, fromSlot, ...)
         error(("Can't find peripheral: %s"):format(toName), 2)
     end
     -- 查找远程外设
-    local targetComponent = LocalNet.getPeripheral(LocalNet.findPeripheral(toName) --[[@as integer]], toName).component[self.type]
+    local targetComponent = LocalNet.getPeripheral(LocalNet.findPeripheral(toName) --[[@as integer]], toName).component
+    [self.type]
     if not targetComponent.type then
         error(("The peripheral: %s isn't Inventory"):format(toName), 2)
     end
@@ -208,6 +209,8 @@ function Inventory:pushItems(toName, fromSlot, ...)
     -- 处理无法转移的物品
     self.dev:removeItem(fromSlot)
     self.dev:addItem(transferItem, removedCount - actuallyTransfer, fromSlot)
+
+    return actuallyTransfer
 end
 
 function Inventory:pullItems(fromName, fromSlot, ...)
@@ -216,7 +219,8 @@ function Inventory:pullItems(fromName, fromSlot, ...)
         error(("Can't find peripheral: %s"):format(fromName), 2)
     end
     -- 查找远程外设
-    local targetComponent = LocalNet.getPeripheral(LocalNet.findPeripheral(fromName) --[[@as integer]], fromName).component[self.type]
+    local targetComponent = LocalNet.getPeripheral(LocalNet.findPeripheral(fromName) --[[@as integer]], fromName)
+    .component[self.type]
     if not targetComponent then
         error(("The peripheral: %s isn't Inventory"):format(fromName), 2)
     end
