@@ -37,8 +37,11 @@ function out.getNames()
 end
 
 function out.wrap(name)
-    assertExist(name)
-    local targetPeripheral = LocalNet.getPeripheral(LocalNet.findPeripheral(name) --[[@as integer]], name)
+    local perNetId = LocalNet.findPeripheral(name)
+    if not perNetId then
+        return nil
+    end
+    local targetPeripheral = LocalNet.getPeripheral(perNetId --[[@as integer]], name)
     local result = {}
     result.__name = name
     result.__type = targetPeripheral.type
@@ -111,7 +114,7 @@ function out.call(name, method, ...)
     local targetMethod
     local targetPeripheral = LocalNet.getPeripheral(LocalNet.findPeripheral(name) --[[@as integer]], name)
     for _, component in pairs(targetPeripheral.component) do
-        if not component[method] then            
+        if not component[method] then
             goto continue
         end
         targetMethod = function(...)
