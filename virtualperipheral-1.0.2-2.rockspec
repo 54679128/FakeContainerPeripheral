@@ -1,8 +1,9 @@
 rockspec_format = "3.0"
 package = "VirtualPeripheral"
-version = "1.0.0-1"
+version = "1.0.2-2"
 source = {
-   url = "git+https://github.com/54679128/VirtualPeripheral.git"
+   url = "git+https://github.com/54679128/VirtualPeripheral.git",
+   tag = "v1.0.2"
 }
 description = {
    summary = "一个轻量级的 ComputerCraft 外设模拟框架",
