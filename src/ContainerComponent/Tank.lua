@@ -79,7 +79,8 @@ function TankDev:addFluid(fluid, amount)
         if fluidStack.fluid.name ~= fluid.name then
             goto continue
         end
-        local transferAmount = math.min(prepareTransfer, self.tank.storageCoefficient * fluidStack.capacity - fluidStack.amount)
+        local transferAmount = math.min(prepareTransfer,
+            self.tank.storageCoefficient * fluidStack.capacity - fluidStack.amount)
         if transferAmount == 0 then
             goto continue
         end
@@ -143,7 +144,7 @@ Tank.__index = Tank
 ---@param storageCoefficient number
 ---@param capacityList number[]
 ---@return a546.Tank
-function out.make(size, storageCoefficient, capacityList)    
+function out.make(size, storageCoefficient, capacityList)
     local o = setmetatable({}, Tank)
     ---@cast o a546.Tank
     o.type = "tank"
@@ -198,6 +199,9 @@ function Tank:pushFluid(toName, ...)
         break
         ::continue::
     end
+    if not selfFirstFluidStack then
+        return 0
+    end
 
     fluidName = fluidName or selfFirstFluidStack.fluid.name
 
@@ -206,7 +210,8 @@ function Tank:pushFluid(toName, ...)
         error(("Can't find peripheral: %s"):format(toName), 2)
     end
     -- 查找远程外设
-    local targetComponent = LocalNet.getPeripheral(LocalNet.findPeripheral(toName) --[[@as integer]], toName).component[self.type]
+    local targetComponent = LocalNet.getPeripheral(LocalNet.findPeripheral(toName) --[[@as integer]], toName).component
+        [self.type]
     if not targetComponent then
         error(("The peripheral: %s isn't %s"):format(toName, self.type), 2)
     end
@@ -247,7 +252,8 @@ function Tank:pullFluid(fromName, ...)
         error(("Can't find peripheral: %s"):format(fromName), 2)
     end
     -- 查找远程外设
-    local targetComponent = LocalNet.getPeripheral(LocalNet.findPeripheral(fromName) --[[@as integer]], fromName).component[self.type]
+    local targetComponent = LocalNet.getPeripheral(LocalNet.findPeripheral(fromName) --[[@as integer]], fromName)
+        .component[self.type]
     if not targetComponent then
         error(("The peripheral: %s isn't %s"):format(fromName, self.type), 2)
     end

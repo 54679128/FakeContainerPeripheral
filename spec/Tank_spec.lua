@@ -56,7 +56,8 @@ describe("tank模块", function()
             end
             for i = 1, #sizeList, 1 do
                 it(
-                ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时可以添加流体"):format(sizeList[i], storageCoefficient[i], commonCapacity),
+                    ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时可以添加流体"):format(sizeList[i], storageCoefficient[i],
+                        commonCapacity),
                     function()
                         local tempCapacityList = {}
                         for j = 1, sizeList[i], 1 do
@@ -77,29 +78,31 @@ describe("tank模块", function()
                         end
                     end)
                 it(
-                ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时，多次添加过量（超出单个储罐容量）流体，应优先填充已含同种流体的未满储罐，其次填充空储罐"):format(sizeList[i],
-                    storageCoefficient[i], commonCapacity), function()
-                    local tempCapacityList = {}
-                    for j = 1, sizeList[i], 1 do
-                        tempCapacityList[j] = commonCapacity
-                    end
-                    local testTank = Tank.make(sizeList[i], storageCoefficient[i], tempCapacityList)
-                    testTank.dev:addFluid(water(), 0.001)
-                    testTank.dev:addFluid(water(), 0.001)
-                    local fullTankNum, emptyTankNum = fullAndEmptyTankNum(testTank.fluidList)
-                    assert.is.equal(1, fullTankNum)
-                    assert.is.equal(sizeList[i] - 1, emptyTankNum)
+                    ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时，多次添加过量（超出单个储罐容量）流体，应优先填充已含同种流体的未满储罐，其次填充空储罐"):format(
+                        sizeList[i],
+                        storageCoefficient[i], commonCapacity), function()
+                        local tempCapacityList = {}
+                        for j = 1, sizeList[i], 1 do
+                            tempCapacityList[j] = commonCapacity
+                        end
+                        local testTank = Tank.make(sizeList[i], storageCoefficient[i], tempCapacityList)
+                        testTank.dev:addFluid(water(), 0.001)
+                        testTank.dev:addFluid(water(), 0.001)
+                        local fullTankNum, emptyTankNum = fullAndEmptyTankNum(testTank.fluidList)
+                        assert.is.equal(1, fullTankNum)
+                        assert.is.equal(sizeList[i] - 1, emptyTankNum)
 
-                    testTank = Tank.make(sizeList[i], storageCoefficient[i], tempCapacityList)
-                    testTank.dev:addFluid(water(), 2 ^ 12 * storageCoefficient[i])
-                    local actuallyTransfer = testTank.dev:addFluid(water(), 0.001)
-                    fullTankNum, emptyTankNum = fullAndEmptyTankNum(testTank.fluidList)
-                    assert.is.Not.equal(0, actuallyTransfer)
-                    assert.is.equal(2, fullTankNum)
-                    assert.is.equal(sizeList[i] - 2, emptyTankNum)
-                end)
+                        testTank = Tank.make(sizeList[i], storageCoefficient[i], tempCapacityList)
+                        testTank.dev:addFluid(water(), 2 ^ 12 * storageCoefficient[i])
+                        local actuallyTransfer = testTank.dev:addFluid(water(), 0.001)
+                        fullTankNum, emptyTankNum = fullAndEmptyTankNum(testTank.fluidList)
+                        assert.is.Not.equal(0, actuallyTransfer)
+                        assert.is.equal(2, fullTankNum)
+                        assert.is.equal(sizeList[i] - 2, emptyTankNum)
+                    end)
                 it(
-                ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时可以移除流体"):format(sizeList[i], storageCoefficient[i], commonCapacity),
+                    ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb时可以移除流体"):format(sizeList[i], storageCoefficient[i],
+                        commonCapacity),
                     function()
                         local tempCapacityList = {}
                         for j = 1, sizeList[i], 1 do
@@ -128,23 +131,24 @@ describe("tank模块", function()
                         assert.is.True(atLeastFined)
                     end)
                 it(
-                ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb且储罐充满流体时，只会移除其中一个储罐的流体"):format(sizeList[i], storageCoefficient[i],
-                    commonCapacity), function()
-                    local tempCapacityList = {}
-                    for j = 1, sizeList[i], 1 do
-                        tempCapacityList[j] = commonCapacity
-                    end
-                    local testTank = Tank.make(sizeList[i], storageCoefficient[i], tempCapacityList)
-                    for j = 1, sizeList[i], 1 do
-                        testTank.dev:addFluid(water(), 2 ^ 12 * storageCoefficient[i])
-                    end
-                    local fullTankNum, emptyTankNum = fullAndEmptyTankNum(testTank.fluidList)
-                    assert.is.equal(sizeList[i], fullTankNum)
-                    testTank.dev:removeFluid(water().name)
-                    fullTankNum, emptyTankNum = fullAndEmptyTankNum(testTank.fluidList)
-                    assert.is.equal(1, emptyTankNum)
-                    assert.is.equal(sizeList[i] - 1, fullTankNum)
-                end)
+                    ("在单组件储罐数为：%d，存储系数为：%.2f，单储罐容量为：%d mb且储罐充满流体时，只会移除其中一个储罐的流体"):format(sizeList[i],
+                        storageCoefficient[i],
+                        commonCapacity), function()
+                        local tempCapacityList = {}
+                        for j = 1, sizeList[i], 1 do
+                            tempCapacityList[j] = commonCapacity
+                        end
+                        local testTank = Tank.make(sizeList[i], storageCoefficient[i], tempCapacityList)
+                        for j = 1, sizeList[i], 1 do
+                            testTank.dev:addFluid(water(), 2 ^ 12 * storageCoefficient[i])
+                        end
+                        local fullTankNum, emptyTankNum = fullAndEmptyTankNum(testTank.fluidList)
+                        assert.is.equal(sizeList[i], fullTankNum)
+                        testTank.dev:removeFluid(water().name)
+                        fullTankNum, emptyTankNum = fullAndEmptyTankNum(testTank.fluidList)
+                        assert.is.equal(1, emptyTankNum)
+                        assert.is.equal(sizeList[i] - 1, fullTankNum)
+                    end)
             end
             pending("使用负数调用addFluid和removeFluid会报错", function()
 
@@ -242,6 +246,12 @@ describe("tank模块", function()
                     assert.is.Not.Nil(next(p.tanks()))
                     tankAComponent.dev:removeFluid(water().name)
                     assert.is.Nil(next(p.tanks()))
+                end)
+                it("在对方储罐没有流体时，尝试使用pullFluid拉取流体会返回0", function()
+                    local p = peripheral.wrap(tankA.name)
+                    assert.is.Not.Nil(p)
+                    local transferAmount = p.pullFluid(tankB.name) -- 由于储罐A在开始测试前被注入了1000mb的水，所以需要从储罐B（空的）拉取流体
+                    assert.is.equal(0, transferAmount)
                 end)
                 it("在自身储罐没有对应流体时，pullFluid可以将目标容器中的流体拉取到自身的一个空储罐中", function()
                     local p = peripheral.wrap(tankB.name)
