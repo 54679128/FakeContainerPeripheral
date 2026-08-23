@@ -27,10 +27,13 @@
 你可以像这样创建物品和流体
 
 ```lua
-local FakeItem = require("VirtualPeripheral").FakeItem
-local FakeFluid = require("VirtualPeripheral").FakeFluid
-local stone = FakeItem.make("minecraft:stone", 64, {})
-local water = FakeFluid.make("minecraft:water")
+local Inventory = require("VirtualPeripheral").Inventory
+local Tank = require("VirtualPeripheral").Tank
+local FakeItem = Inventory.FakeItem
+local FakeFluid = Tank.FakeFluid
+
+local stone = FakeItem.make("minecraft:stone", 64, {}) -- 物品，名为“minecraft:stone”，堆叠上限为64，无额外nbt
+local water = FakeFluid.make("minecraft:water") -- 流体，名为“minecraft:water”
 ```
 
 `FakeItem.make`有三个参数，`name`、`stackLimit`以及`nbt`，而`FakeFluid`只有一个参数`name`。
