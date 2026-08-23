@@ -76,7 +76,7 @@ local VirtualPeripheral = require("VirtualPeripheral").VirtualPeripheral
 local chest = VirtualPeripheral.make("chest", inv)
 local bottle = VirtualPeripheral.make("bottle", tan)
 
--- 或者
+-- 该函数可接受多个不同类型（注意，不同类型）的组件，所以你可以这么写
 --[[
 local backpack = VirtualPeripheral.make("backpack", inv, tan)
 ]]
