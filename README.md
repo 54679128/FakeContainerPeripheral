@@ -111,6 +111,16 @@ LocalNet.removePeripheral(aNet, chest.name)
 
 `LocalNet`模块还提供了其它功能，你可以自行查看相关注释。
 
+### 模块配置
+
+该模块提供了`config`子模块用于配置一些可选功能。目前，该子模块仅用于配置“是否开启只读模式”，即使用者是否能修改创建出的流体、物品存储组件、虚拟外设、物品和流体。目前该配置默认启用。具体示例如下：
+
+```lua
+local config = require("VirtualPeripheral").config
+print(("ReadOnly feature is %s"):format(tostring(config.readOnly()--[[不带参数调用时会返回当前配置的值]])))
+config.readOnly(false) -- 关闭只读保护功能
+```
+
 ## 运行测试
 
 本项目使用 [Busted](https://lunarmodules.github.io/busted/) 作为测试框架。确保已安装 Busted 后，在项目根目录执行：
