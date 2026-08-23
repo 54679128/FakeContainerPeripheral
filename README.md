@@ -45,16 +45,17 @@ local water = FakeFluid.make("minecraft:water") -- 流体，名为“minecraft:w
 
 ### 创建外设组件
 
-该模块提供了`tank`和`Inventory`模块，下面以这两种模块为例讲解。
+该模块目前提供了`tank`和`Inventory`模块，下面以这两种模块为例讲解。
 
 ```lua
 local Inventory = require("VirtualPeripheral").Inventory
-local tank = require("VirtualPeripheral").tank
-local inv = Inventory.make(28, 1)
-local tan = tank.make(4, 1, {1000, 1000, 1000, 1000})
-local addItemCount = inv.dev:addItem(stone, 64, 1)
+local Tank = require("VirtualPeripheral").Tank
+
+local inv = Inventory.make(28, 1) -- 创建一个槽位上限为28，堆叠系数为1的物品存储组件
+local tan = Tank.make(4, 1, {1000, 1000, 1000, 1000}) -- 创建一个可容纳四种流体，堆叠系数为1，每个储罐均为1000mb的流体存储组件
+local addItemCount = inv.dev:addItem(stone, 64, 1) -- 向物品存储组件的1号槽位中加入物品`stone`
 local removedItem, removedCount = inv.dev:removeItem(1, 32)
-local addFluidAmount = tan.dev:addFluid(water, 1000)
+local addFluidAmount = tan.dev:addFluid(water, 1000) -- 向流体存储组件中加入流体`water`
 local removedFluid, removedAmount = tan.dev:removeFluid(water.name, 500)
 ```
 
@@ -66,6 +67,7 @@ local removedFluid, removedAmount = tan.dev:removeFluid(water.name, 500)
 
 - 除非你知道你在做什么，否则不要通过`dev`字段提供的函数以外的方式修改创建好的外设组件；
 - 在创建流体存储外设组件时，**`#capacityList`必须等于`size`**；
+- 槽位编号总是从1开始
 
 ### 组装虚拟外设
 
